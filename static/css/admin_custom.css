@@ -1,0 +1,25 @@
+.custom-sidebar {
+    background-color: #1f2937; /* dark gray */
+    color: white;
+}
+
+.custom-sidebar .sidebar-menu li a {
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    text-decoration: none;
+}
+
+.custom-sidebar .sidebar-menu li a:hover {
+    background-color: #3b82f6; /* blue hover */
+}
+
+.custom-sidebar .menu-header {
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 20px;
+    padding-left: 15px;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}

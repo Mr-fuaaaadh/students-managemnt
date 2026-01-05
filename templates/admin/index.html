@@ -1,0 +1,611 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    :root {
+        --primary: #3b82f6;
+        --primary-hover: #2563eb;
+        --secondary: #6366f1;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --dark: #1f2937;
+        --light: #f3f4f6;
+        --gray: #6b7280;
+        --white: #ffffff;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --radius: 8px;
+        --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #content {
+        padding: 24px !important;
+        background: #f8fafc !important;
+        min-height: calc(100vh - 64px);
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    /* Dashboard Container */
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Header Section */
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        padding: 24px;
+        background: var(--dark);
+        border-radius: var(--radius);
+        color: white;
+        box-shadow: var(--shadow);
+    }
+
+    .dashboard-header h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+    }
+
+    .header-stats {
+        display: flex;
+        gap: 16px;
+    }
+
+    .header-stat {
+        text-align: right;
+        padding-left: 16px;
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .header-stat h3 {
+        margin: 0;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #9ca3af;
+        letter-spacing: 0.05em;
+    }
+
+    .header-stat p {
+        margin: 2px 0 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    /* Stats Grid - Smaller cards in one line */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: var(--white);
+        padding: 16px 20px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid #e5e7eb;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+        border-color: var(--primary);
+    }
+
+    .stat-card-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .stat-card.users .stat-card-icon {
+        background: #eff6ff;
+        color: #3b82f6;
+    }
+
+    .stat-card.products .stat-card-icon {
+        background: #fdf2f8;
+        color: #ec4899;
+    }
+
+    .stat-card.orders .stat-card-icon {
+        background: #f0fdf4;
+        color: #10b981;
+    }
+
+    .stat-card.revenue .stat-card-icon {
+        background: #fffbeb;
+        color: #f59e0b;
+    }
+
+    .stat-card-content h3 {
+        margin: 0;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--gray);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .stat-card-content p {
+        margin: 2px 0 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark);
+        line-height: 1;
+    }
+
+    .stat-card-content .trend {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-top: 4px;
+    }
+
+    .trend.positive {
+        color: #10b981;
+    }
+
+    .trend.negative {
+        color: #ef4444;
+    }
+
+    /* Main Content Layout */
+    .dashboard-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+    }
+
+    /* Charts & Tables */
+    .dashboard-section {
+        background: var(--white);
+        border-radius: var(--radius);
+        border: 1px solid #e5e7eb;
+        box-shadow: var(--shadow-sm);
+        padding: 20px;
+        margin-bottom: 24px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .section-header h2 {
+        margin: 0;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .section-header h2 i {
+        color: var(--primary);
+    }
+
+    .view-all {
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+
+    .view-all:hover {
+        color: var(--primary-hover);
+    }
+
+    /* Recent Table */
+    .recent-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .recent-table th {
+        padding: 12px;
+        text-align: left;
+        color: var(--gray);
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .recent-table td {
+        padding: 12px;
+        color: var(--dark);
+        font-size: 0.875rem;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .recent-table tbody tr:hover {
+        background: #f9fafb;
+    }
+
+    /* Status Badges */
+    .status-badge {
+        padding: 4px 10px;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .status-completed {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-processing {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .status-cancelled {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    /* Activity Feed */
+    .activity-feed {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px;
+        border-radius: var(--radius);
+        transition: var(--transition);
+    }
+
+    .activity-item:hover {
+        background: #f9fafb;
+    }
+
+    .activity-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f3f4f6;
+        color: var(--gray);
+        font-size: 0.875rem;
+        flex-shrink: 0;
+    }
+
+    .activity-content h4 {
+        margin: 0;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    .activity-content p {
+        margin: 2px 0 0;
+        font-size: 0.75rem;
+        color: var(--gray);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1280px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .dashboard-content {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .header-stats {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    /* Pagination Styles */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #f3f4f6;
+    }
+
+    .pagination-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        background: #f3f4f6;
+        color: var(--dark);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: var(--transition);
+        border: 1px solid transparent;
+    }
+
+    .pagination-link:hover {
+        background: #e5e7eb;
+        border-color: #d1d5db;
+    }
+
+    .pagination-link.active {
+        background: var(--primary);
+        color: white;
+    }
+
+    .pagination-link.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .pagination-step {
+        padding: 0 12px;
+        width: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div>
+            <h1>Dashboard Overview</h1>
+            <p style="opacity: 0.8; margin-top: 4px; font-size: 0.875rem;">Welcome back! Here's a summary of the
+                school's current operations.</p>
+        </div>
+        <div class="header-stats">
+            <div class="header-stat">
+                <h3>Today's Collection</h3>
+                <p>₹ {{ todays_collection|default:"0" }}</p>
+            </div>
+            <div class="header-stat">
+                <h3>Active Courses</h3>
+                <p>{{ total_courses|default:"0" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+
+        <div class="stat-card users">
+            <div class="stat-card-icon">👥</div>
+            <div class="stat-card-content">
+                <h3>Total Students</h3>
+                <p>{{ total_students }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card products">
+            <div class="stat-card-icon">👨‍🏫</div>
+            <div class="stat-card-content">
+                <h3>Total Staff</h3>
+                <p>{{ total_staff }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card orders">
+            <div class="stat-card-icon">📈</div>
+            <div class="stat-card-content">
+                <h3>New Leads</h3>
+                <p>{{ total_leads }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card revenue">
+            <div class="stat-card-icon">💰</div>
+            <div class="stat-card-content">
+                <h3>Fees Collected</h3>
+                <p>₹ {{ fees_collected|default:"0" }}</p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="dashboard-content">
+        <!-- Left Column -->
+        <div>
+            <!-- Recent Orders -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Recent Fee Payments</h2>
+                    <a href="#" class="view-all">View All Transactions →</a>
+                </div>
+                <table class="recent-table">
+                    <thead>
+                        <tr>
+                            <th>Receipt ID</th>
+                            <th>Student Name</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in recent_payments %}
+                        <tr>
+                            <td>#{{ payment.id }}</td>
+                            <td>{{ payment.student_fee.student.full_name }}</td>
+                            <td>₹ {{ payment.amount }}</td>
+                            <td><span class="status-badge status-completed">Completed</span></td>
+                            <td>{{ payment.created_at|date:"D, h:i A" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align: center;">No recent payments found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if recent_payments.paginator.num_pages > 1 %}
+                <div class="pagination">
+                    {% if recent_payments.has_previous %}
+                    <a href="?p_page={{ recent_payments.previous_page_number }}&a_page={{ recent_activity.number }}"
+                        class="pagination-link pagination-step">Previous</a>
+                    {% else %}
+                    <span class="pagination-link pagination-step disabled">Previous</span>
+                    {% endif %}
+
+                    <span class="pagination-link active">{{ recent_payments.number }}</span>
+
+                    {% if recent_payments.has_next %}
+                    <a href="?p_page={{ recent_payments.next_page_number }}&a_page={{ recent_activity.number }}"
+                        class="pagination-link pagination-step">Next</a>
+                    {% else %}
+                    <span class="pagination-link pagination-step disabled">Next</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Quick Operations</h2>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+                    <button class="btn-action">
+                        <span>➕</span> Add New Student
+                    </button>
+                    <button class="btn-action btn-secondary">
+                        <span>📊</span> View Reports
+                    </button>
+                    <button class="btn-action btn-success">
+                        <span>✅</span> Mark Attendance
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div>
+            <!-- Quick Stats -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Performance</h2>
+                </div>
+                <div class="quick-stats">
+                    <div class="quick-stat-item">
+                        <h4>Attendance Rate</h4>
+                        <p>{{ attendance_rate|default:"0" }}%</p>
+                    </div>
+                    <div class="quick-stat-item">
+                        <h4>Fee Collection</h4>
+                        <p>{{ collection_rate|default:"0" }}%</p>
+                    </div>
+                    <div class="quick-stat-item">
+                        <h4>Student Retention</h4>
+                        <p>100%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Recent Updates</h2>
+                </div>
+                <div class="activity-feed">
+                    {% for activity in recent_activity %}
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            {% if activity.is_addition %}➕{% elif activity.is_change %}📝{% else %}🗑️{% endif %}
+                        </div>
+                        <div class="activity-content">
+                            <h4>{{ activity.object_repr }}</h4>
+                            <p>{{ activity.user.get_full_name|default:activity.user.username }} - {{ activity.action_time|timesince }} ago</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p style="text-align: center; color: var(--gray); font-size: 0.875rem;">No recent activities</p>
+                    {% endfor %}
+                </div>
+
+                {% if recent_activity.paginator.num_pages > 1 %}
+                <div class="pagination">
+                    {% if recent_activity.has_previous %}
+                    <a href="?a_page={{ recent_activity.previous_page_number }}&p_page={{ recent_payments.number }}"
+                        class="pagination-link pagination-step">Prev</a>
+                    {% else %}
+                    <span class="pagination-link pagination-step disabled">Prev</span>
+                    {% endif %}
+
+                    <span class="pagination-link active">{{ recent_activity.number }}</span>
+
+                    {% if recent_activity.has_next %}
+                    <a href="?a_page={{ recent_activity.next_page_number }}&p_page={{ recent_payments.number }}"
+                        class="pagination-link pagination-step">Next</a>
+                    {% else %}
+                    <span class="pagination-link pagination-step disabled">Next</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
