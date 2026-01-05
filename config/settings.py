@@ -196,6 +196,7 @@ UNFOLD = {
                         "icon": "dashboard",
                         "link": "/admin/",
                         "permission": lambda r: r.user.is_authenticated,
+                        "url_type": "absolute",
                     },
                 ],
             },
@@ -290,3 +291,4 @@ UNFOLD = {
 
 ATTENDANCE_CUTOFF_HOUR = 10
 ATTENDANCE_CUTOFF_MINUTE = 30
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
