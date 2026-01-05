@@ -150,6 +150,7 @@ STATICFILES_DIRS = [
 ]
 
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -172,7 +173,7 @@ UNFOLD = {
     "SITE_SUBHEADER": "Staff & Operations",
     "SHOW_HISTORY": True,
     "SHOW_VIEW_ON_SITE": False,
-    "SITE_URL": "",
+    "SITE_URL": "/admin/",
     "SITE_ICON": {
         "light": "https://corusinfo.com/assets/images/LOGO[1]%201.png",
         "dark": "https://corusinfo.com/assets/images/LOGO[1]%201.png",
@@ -193,8 +194,9 @@ UNFOLD = {
                     {
                         "title": "Dashboard",
                         "icon": "dashboard",
-                        "link": "",
+                        "link": "/admin/",
                         "permission": lambda r: r.user.is_authenticated,
+                        "url_type": "absolute",
                     },
                 ],
             },
@@ -206,14 +208,16 @@ UNFOLD = {
                     {
                         "title": "Staff",
                         "icon": "group",
-                        "link": "staff/staff/",
+                        "link": "/admin/staff/staff/",
                         "permission": lambda r: can(r, "staff.view_staff"),
+                        "url_type": "absolute",
                     },
                     {
                         "title": "Students",
                         "icon": "person",
-                        "link": "students/student/",
+                        "link": "/admin/students/student/",
                         "permission": lambda r: can(r, "students.view_student"),
+                        "url_type": "absolute",
                     },
                 ],
             },
@@ -225,8 +229,9 @@ UNFOLD = {
                     {
                         "title": "Fee Management",
                         "icon": "payments",
-                        "link": "fees/studentfee/",
+                        "link": "/admin/fees/studentfee/",
                         "permission": lambda r: can(r, "fees.view_studentfee"),
+                        "url_type": "absolute",
                     },
                 ],
             },
@@ -238,8 +243,9 @@ UNFOLD = {
                     {
                         "title": "Leads",
                         "icon": "contact_page",
-                        "link": "leads/lead/",
+                        "link": "/admin/leads/lead/",
                         "permission": lambda r: can(r, "leads.view_lead"),
+                        "url_type": "absolute",
                     },
                 ],
             },
@@ -251,14 +257,16 @@ UNFOLD = {
                     {
                         "title": "Courses",
                         "icon": "menu_book",
-                        "link": "courses/course/",
+                        "link": "/admin/courses/course/",
                         "permission": lambda r: can(r, "courses.view_course"),
+                        "url_type": "absolute",
                     },
                     {
                         "title": "Attendance",
                         "icon": "event_available",
-                        "link": "attendance/attendance/",
+                        "link": "/admin/attendance/attendance/",
                         "permission": lambda r: can(r, "attendance.view_attendance"),
+                        "url_type": "absolute",
                     },
                 ],
             },
@@ -283,5 +291,3 @@ UNFOLD = {
 
 ATTENDANCE_CUTOFF_HOUR = 10
 ATTENDANCE_CUTOFF_MINUTE = 30
-
-
