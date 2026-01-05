@@ -196,7 +196,6 @@ UNFOLD = {
                         "icon": "dashboard",
                         "link": "/admin/",
                         "permission": lambda r: r.user.is_authenticated,
-                        "url_type": "absolute",
                     },
                 ],
             },
