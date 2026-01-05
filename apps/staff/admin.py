@@ -20,10 +20,6 @@ class StaffAdmin(UserAdmin):
         "date_joined",
     )
 
-    list_filter = ("role", "is_active", "date_joined")
-    ordering = ("-date_joined",)
-    search_fields = ("username", "first_name", "last_name", "email")
-
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         ("Personal Info", {"fields": ("first_name", "last_name", "email", "phone", "address")}),
@@ -33,3 +29,11 @@ class StaffAdmin(UserAdmin):
 
     def full_name(self, obj):
         return obj.get_full_name() or obj.username
+
+    full_name.short_description = "Full Name"
+
+    class Media:
+        css = {
+            "all": ("admin/css/staff_admin.css",)
+        }
+

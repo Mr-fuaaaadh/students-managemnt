@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6on4-j-uxor!d27!%kp3lhs8*7z(mh7aj!x63nmq*)9q8h@pyc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -292,3 +292,6 @@ UNFOLD = {
 ATTENDANCE_CUTOFF_HOUR = 10
 ATTENDANCE_CUTOFF_MINUTE = 30
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+

@@ -1,0 +1,28 @@
+/* Staff Admin Form Styling */
+
+#staff_form input,
+#staff_form select,
+#staff_form textarea {
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 14px;
+}
+
+#staff_form input:focus,
+#staff_form select:focus,
+#staff_form textarea:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px rgba(79,70,229,.25);
+    outline: none;
+}
+
+fieldset.module h2 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.submit-row input[type="submit"] {
+    background: #4f46e5 !important;
+    border-radius: 8px !important;
+}

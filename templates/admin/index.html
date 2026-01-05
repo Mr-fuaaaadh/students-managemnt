@@ -529,17 +529,20 @@
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
                     <button class="btn-action">
-                        <span>➕</span> Add New Student
+                        <span>➕</span>
+                        <a href="{% url 'admin:students_student_add' %}">Add New Student</a>
                     </button>
                     <button class="btn-action btn-secondary">
-                        <span>📊</span> View Reports
+                        <span>📊</span>
+                        <a href="#">View Reports</a>
                     </button>
                     <button class="btn-action btn-success">
-                        <span>✅</span> Mark Attendance
+                        <span>✅</span>
+                        <a href="{% url 'admin:attendance_attendance_add' %}">Mark Attendance</a>
                     </button>
                 </div>
             </div>
-        </div>
+        </div>  
 
         <!-- Right Column -->
         <div>

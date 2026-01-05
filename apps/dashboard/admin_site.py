@@ -66,7 +66,7 @@ class SchoolAdminSite(AdminSite):
             .filter(is_active=True)
             .order_by("-created_at")
         )
-        p_paginator = Paginator(payments_list, 5)
+        p_paginator = Paginator(payments_list, 10)
         p_page_number = request.GET.get("p_page")
         extra_context["recent_payments"] = p_paginator.get_page(p_page_number)
 
@@ -75,7 +75,7 @@ class SchoolAdminSite(AdminSite):
             LogEntry.objects.select_related("user", "content_type")
             .order_by("-action_time")
         )
-        a_paginator = Paginator(activity_list, 10)
+        a_paginator = Paginator(activity_list, 5)
         a_page_number = request.GET.get("a_page")
         extra_context["recent_activity"] = a_paginator.get_page(a_page_number)
 
