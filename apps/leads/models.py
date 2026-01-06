@@ -37,7 +37,6 @@ class Lead(TimeStampedModel, ActiveModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        limit_choices_to={"role": "sales"},
         related_name="assigned_leads"
     )
 
