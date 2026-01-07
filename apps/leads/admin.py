@@ -16,7 +16,7 @@ class LeadAdmin(ModelAdmin):
         "assigned_to",
         "created_at",
     )
-
+    list_display_links = ("name",)
     list_filter = ("status", "course", "assigned_to", "created_at")
     search_fields = ("name", "phone", "email")
     ordering = ("-created_at",)

@@ -23,7 +23,9 @@ class StaffAdmin(UserAdmin):
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         ("Personal Info", {"fields": ("first_name", "last_name", "email", "phone", "address")}),
-        ("Permissions", {"fields": ("role", "is_active", "is_staff", "is_superuser", "user_permissions")}),
+        ("Permissions", {
+            "fields": ("role", "is_active", "is_staff", "is_superuser", "groups", "user_permissions")
+        }),
         ("Important Dates", {"fields": ("last_login", "date_joined")}),
     )
 

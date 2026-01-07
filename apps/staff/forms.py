@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User
 from .models import Staff
 
@@ -6,6 +7,21 @@ from .models import Staff
 UNFOLD_INPUT = {
     "class": "w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
 }
+
+
+class TogglePasswordInput(forms.PasswordInput):
+    template_name = "django/forms/widgets/password.html"
+
+    def render(self, name, value, attrs=None, renderer=None):
+        html = super().render(name, value, attrs, renderer)
+        toggle_html = (
+            '<button type="button" onclick="const p=this.previousElementSibling; p.type=p.type===\'password\'?\'text\':\'password\';" '
+            'style="margin-left:-40px; background:none; border:none; cursor:pointer; color:#4f46e5; font-size:12px; font-weight:600; vertical-align:middle;">'
+            'Show/Hide</button>'
+        )
+        return mark_safe(
+            f'<div style="display:flex; align-items:center;">{html}{toggle_html}</div>'
+        )
 
 
 class StaffAdminForm(forms.ModelForm):
@@ -25,9 +41,10 @@ class StaffAdminForm(forms.ModelForm):
         widget=forms.EmailInput(attrs={**UNFOLD_INPUT, "placeholder": "Email"})
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(
+        required=False,
+        widget=TogglePasswordInput(
             render_value=True,
-            attrs={**UNFOLD_INPUT, "placeholder": "Password"}
+            attrs={**UNFOLD_INPUT, "placeholder": "Password (leave blank to keep current)"}
         )
     )
 
@@ -43,20 +60,28 @@ class StaffAdminForm(forms.ModelForm):
             "is_active": forms.CheckboxInput(attrs={"class": "toggle"}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.fields["username"].initial = self.instance.username
+            self.fields["first_name"].initial = self.instance.first_name
+            self.fields["last_name"].initial = self.instance.last_name
+            self.fields["email"].initial = self.instance.email
+            self.fields["password"].required = False
+
     def save(self, commit=True):
         staff = super().save(commit=False)
+        
+        # Update user fields directly on the Staff instance
+        staff.username = self.cleaned_data["username"]
+        staff.first_name = self.cleaned_data.get("first_name", "")
+        staff.last_name = self.cleaned_data.get("last_name", "")
+        staff.email = self.cleaned_data["email"]
 
-        if not staff.pk:
-            user = User.objects.create_user(
-                username=self.cleaned_data["username"],
-                first_name=self.cleaned_data.get("first_name", ""),
-                last_name=self.cleaned_data.get("last_name", ""),
-                email=self.cleaned_data["email"],
-                password=self.cleaned_data["password"],
-            )
-            staff.user = user
+        password = self.cleaned_data.get("password")
+        if password:
+            staff.set_password(password)
 
         if commit:
             staff.save()
-
         return staff
