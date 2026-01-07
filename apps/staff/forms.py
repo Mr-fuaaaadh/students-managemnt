@@ -43,7 +43,7 @@ class StaffAdminForm(forms.ModelForm):
     password = forms.CharField(
         required=False,
         widget=TogglePasswordInput(
-            render_value=True,
+            render_value=False,
             attrs={**UNFOLD_INPUT, "placeholder": "Password (leave blank to keep current)"}
         )
     )

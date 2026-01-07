@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .models import Staff
-from .forms import StaffAdminForm  # optional custom form
+from .forms import StaffAdminForm 
 
 
 @admin.register(Staff)
