@@ -168,9 +168,9 @@ UNFOLD = {
     # --------------------
     # Site Branding
     # --------------------
-    "SITE_TITLE": "School Management",
-    "SITE_HEADER": "School Management Admin",
-    "SITE_SUBHEADER": "Staff & Operations",
+    "SITE_TITLE": "Corporate Training",
+    "SITE_HEADER": "Corporate Training Admin",
+    "SITE_SUBHEADER": "Learning & Development",
     "SHOW_HISTORY": True,
     "SHOW_VIEW_ON_SITE": False,
     "SITE_URL": "/admin/",

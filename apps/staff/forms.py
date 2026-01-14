@@ -60,6 +60,17 @@ class StaffAdminForm(forms.ModelForm):
             "is_active": forms.CheckboxInput(attrs={"class": "toggle"}),
         }
 
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+
+        allowed_domain = "@corusinfo.com"
+        if not email.lower().endswith(allowed_domain):
+            raise forms.ValidationError(
+                "Only corusinfo.com email addresses are allowed."
+            )
+
+        return email
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
